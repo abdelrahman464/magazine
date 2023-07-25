@@ -1,13 +1,12 @@
 const path = require("path");
 const express = require("express");
-//middleware
 const morgan = require("morgan");
-//env file
 const cors = require("cors");
 const compression = require("compression");
-
-
 const dotenv = require("dotenv");
+// const mysql2 = require("mysql2");
+
+const db = require("./models");
 
 dotenv.config({ path: "config.env" });
 
@@ -15,13 +14,10 @@ dotenv.config({ path: "config.env" });
 // const mountRoutes = require("./routes");
 
 //error class that i made in utils to handle operational error
+
 const ApiError = require("./utils/apiError");
 //GLobal error handling middleware for express
 const globalError = require("./middlewares/errorMiddleware");
-
-
-//connect with database
-// dbConnection();
 
 //express app
 const app = express();
@@ -31,7 +27,6 @@ app.options("*", cors());
 
 // compress all responses
 app.use(compression());
-
 
 //middlewares
 //pasring the comming data to json
@@ -43,7 +38,6 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   console.log(process.env.NODE_ENV);
 }
-
 
 // Mount Routes
 // mountRoutes(app);
@@ -58,16 +52,18 @@ app.all("*", (req, res, next) => {
 app.use(globalError);
 
 const PORT = process.env.PORT || 8000;
-const server = app.listen(PORT, () => {
-  console.log(`app running on ${PORT}`);
-});
+db.sequelize.sync().then(() => {
+  const server = app.listen(PORT, () => {
+    console.log(`App running on ${PORT}`);
+  });
 
-//handle Rejection out side express
-//Events =>list =>callback(err)
-process.on("unhandledRejection", (err) => {
-  console.error(`UnhandledRejection Errors :${err.name} | ${err.message}`);
-  server.close(() => {
-    console.log("Shutting Down.....");
-    process.exit(1);
+  // Handle unhandled rejections outside of Express
+  // Events => list => callback(err)
+  process.on("unhandledRejection", (err) => {
+    console.error(`Unhandled Rejection Error: ${err.name} | ${err.message}`);
+    server.close(() => {
+      console.log("Shutting Down.....");
+      process.exit(1);
+    });
   });
 });
