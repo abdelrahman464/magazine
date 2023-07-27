@@ -11,7 +11,7 @@ const db = require("./models");
 dotenv.config({ path: "config.env" });
 
 //route
-// const mountRoutes = require("./routes");
+const mountRoutes = require("./routes");
 
 //error class that i made in utils to handle operational error
 
@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Mount Routes
-// mountRoutes(app);
+mountRoutes(app);
 
 //if there is a problem with routes
 // catch the wrong routes that i never Mount
@@ -51,12 +51,11 @@ app.all("*", (req, res, next) => {
 
 app.use(globalError);
 
-const PORT = process.env.PORT || 8000;
-db.sequelize.sync().then(() => {
+db.sequelize.sync().then((req) => {
+  const PORT = process.env.PORT || 8000;
   const server = app.listen(PORT, () => {
     console.log(`App running on ${PORT}`);
   });
-
   // Handle unhandled rejections outside of Express
   // Events => list => callback(err)
   process.on("unhandledRejection", (err) => {

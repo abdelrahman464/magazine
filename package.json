@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
     "express-validator": "^7.0.1",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.1",
@@ -21,7 +22,9 @@
     "mysql2": "^3.5.2",
     "path": "^0.12.7",
     "process": "^0.11.10",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.32.1",
+    "sharp": "^0.32.4",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "eslint": "^8.36.0",
