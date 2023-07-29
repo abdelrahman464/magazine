@@ -1,16 +1,9 @@
 const { v4: uuidv4 } = require("uuid");
-const sharp = require("sharp");
 const fs = require("fs");
 const asyncHandler = require("express-async-handler");
-const { Sequelize, DataTypes } = require("sequelize");
-const config = require("../config/config.json");
 
-const sequelize = new Sequelize(config.development);
+const { Issue, Research } = require("../models");
 
-const  Issue  = require("../models/issue")(sequelize, DataTypes);
-const  Research  = require("../models/research")(sequelize, DataTypes);
-
-sequelize.sync();
 const {
   updateOne,
   createOne,
@@ -20,11 +13,8 @@ const {
 } = require("./handlerFactory");
 const { uploadMixOfImages } = require("../middlewares/uploadImageMiddleware");
 
-exports.uploadResearchImages = uploadMixOfImages([
-  {
-    name: "image",
-    maxCount: 1,
-  },
+exports.uploadResearchPdf = uploadMixOfImages([
+ 
   {
     name: "pdf",
     maxCount: 1,
@@ -32,22 +22,8 @@ exports.uploadResearchImages = uploadMixOfImages([
 ]);
 
 //image processing
-exports.resizeResearchImages = asyncHandler(async (req, res, next) => {
-  //1- Image processing for imageCover
-  if (req.files.image) {
-    const imageFileName = `research-${uuidv4()}-${Date.now()}.jpeg`;
+exports.resizeResearchPdf = asyncHandler(async (req, res, next) => {
 
-    await sharp(req.files.image[0].buffer)
-      .resize(2000, 1333)
-      .toFormat("jpeg")
-      .jpeg({ quality: 95 })
-      .toFile(`uploads/researches/images/${imageFileName}`);
-
-    // Save image into our db
-    req.body.image = imageFileName;
-  }
-
-  // 2. PDF processing
   if (req.files.pdf) {
     const pdfFile = req.files.pdf[0];
     const pdfFileName = `research-pdf-${uuidv4()}-${Date.now()}.pdf`;

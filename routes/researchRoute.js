@@ -5,8 +5,8 @@ const {
   getResearchById,
   getAllResearches,
   deleteResearch,
-  uploadResearchImages,
-  resizeResearchImages,
+  uploadResearchPdf,
+  resizeResearchPdf,
 } = require("../services/researchServices");
 
 const router = express.Router();
@@ -14,10 +14,10 @@ const router = express.Router();
 router
   .route("/")
   .get(getAllResearches)
-  .post(uploadResearchImages, resizeResearchImages, createResearch);
+  .post(uploadResearchPdf, resizeResearchPdf, createResearch);
 router
   .route("/:id")
-  .put(uploadResearchImages, resizeResearchImages, updateResearch)
+  .put(uploadResearchPdf, resizeResearchPdf, updateResearch)
   .delete(deleteResearch)
   .get(getResearchById);
 

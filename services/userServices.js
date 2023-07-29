@@ -1,10 +1,5 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const config = require("../config/config.json");
+const { User } = require("../models");
 
-const sequelize = new Sequelize(config.development);
-const  User  = require("../models/user")(sequelize, DataTypes);
-
-sequelize.sync();
 const {
   updateOne,
   createOne,

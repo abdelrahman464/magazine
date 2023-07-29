@@ -1,7 +1,5 @@
-
-
-module.exports = (sequelize,DataTypes) => {
-  const Research = sequelize.define("Research", {
+module.exports = (db,DataTypes) => {
+  const Research = db.define("Research", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -15,28 +13,21 @@ module.exports = (sequelize,DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    // image: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
   });
 
-  Research.associate = (models) => {
-    Research.belongsTo(models.Issue, {
-      foreignKey: "issueId",
-      as: "issue",
-    });
-    
-  };
  
 
 
   function setUrls(instance) {
     if (instance) {
       // Set image and PDF base URLs + file names
-      if (instance.image) {
-        instance.image = `${process.env.BASE_URL}/researches/images/${instance.image}`;
-      }
+      // if (instance.image) {
+      //   instance.image = `${process.env.BASE_URL}/researches/images/${instance.image}`;
+      // }
       if (instance.pdf) {
         instance.pdf = `${process.env.BASE_URL}/researches/pdfs/${instance.pdf}`;
       }

@@ -1,5 +1,5 @@
-module.exports = (sequelize, DataTypes) => {
-  const Magazine = sequelize.define("Magazine", {
+module.exports = (db, DataTypes) => {
+  const Magazine = db.define("Magazine", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -10,12 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  Magazine.associate = (models) => {
-    Magazine.hasMany(models.Issue, {
-      foreignKey: "magazineId",
-      as: "issues",
-    });
-  };
+ 
 
   return Magazine;
 };

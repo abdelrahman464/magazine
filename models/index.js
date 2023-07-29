@@ -1,50 +1,34 @@
-"use strict";
-
-const fs = require("fs");
-const path = require("path");
 const Sequelize = require("sequelize");
-const process = require("process");
 
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
-const db = {};
-
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-  );
-}
-
-fs.readdirSync(__dirname)
-  .filter(
-    (file) =>
-      file.indexOf(".") !== 0 &&
-      file !== basename &&
-      file.slice(-3) === ".js" &&
-      file.indexOf(".test.js") === -1
-  )
-  .forEach((file) => {
-    const model = require(path.join(__dirname, file))(
-      sequelize,
-      Sequelize.DataTypes
-    );
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+const db = new Sequelize(
+  process.env.DATABASE,
+  process.env.DATABASE_USERNAME,
+  process.env.DATABASE_PASSWORD,
+  {
+    host: "localhost",
+    dialect: "mysql",
   }
+);
+//import schemas
+const UserModel = require("./user");
+const MagazineModel = require("./magazine");
+const ResearchModel = require("./research");
+const IssueModel = require("./issue");
+//createa models
+const User = UserModel(db, Sequelize);
+const Magazine = MagazineModel(db, Sequelize);
+const Research = ResearchModel(db, Sequelize);
+const Issue = IssueModel(db, Sequelize);
+//define relationships
+//Magazine & Issue relationships (one to many)
+Magazine.hasMany(Issue, { as: "nums" });
+Issue.belongsTo(Magazine);
+//Issue & Researches relationships (one to many)
+Issue.hasMany(Research, { as: "Researches" });
+Research.belongsTo(Issue);
+//generate tables in DB
+db.sync({ force: false }).then(() => {
+  console.log("Tables Created");
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-sequelize.sync();
-module.exports = db;
+module.exports = { User, Magazine, Research, Issue };

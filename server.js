@@ -5,10 +5,9 @@ const cors = require("cors");
 const compression = require("compression");
 const dotenv = require("dotenv");
 // const mysql2 = require("mysql2");
-
-const db = require("./models");
-
 dotenv.config({ path: "config.env" });
+
+
 
 //route
 const mountRoutes = require("./routes");
@@ -51,18 +50,17 @@ app.all("*", (req, res, next) => {
 
 app.use(globalError);
 
-db.sequelize.sync().then((req) => {
-  const PORT = process.env.PORT || 8000;
-  const server = app.listen(PORT, () => {
-    console.log(`App running on ${PORT}`);
-  });
-  // Handle unhandled rejections outside of Express
-  // Events => list => callback(err)
-  process.on("unhandledRejection", (err) => {
-    console.error(`Unhandled Rejection Error: ${err.name} | ${err.message}`);
-    server.close(() => {
-      console.log("Shutting Down.....");
-      process.exit(1);
-    });
+
+const PORT = process.env.PORT || 8000;
+const server = app.listen(PORT, () => {
+  console.log(`App running on ${PORT}`);
+});
+// Handle unhandled rejections outside of Express
+// Events => list => callback(err)
+process.on("unhandledRejection", (err) => {
+  console.error(`Unhandled Rejection Error: ${err.name} | ${err.message}`);
+  server.close(() => {
+    console.log("Shutting Down.....");
+    process.exit(1);
   });
 });
