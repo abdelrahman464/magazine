@@ -24,7 +24,6 @@ exports.resizeIssuesImage = asyncHandler(async (req, res, next) => {
     const imageFileName = `issue-${uuidv4()}-${Date.now()}.jpeg`;
 
     const pdfPath = `uploads/issues/${imageFileName}`;
-
     // Save the PDF file using fs
     fs.writeFileSync(pdfPath, imageFile.buffer);
     // Save PDF into our db

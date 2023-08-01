@@ -1,9 +1,11 @@
-module.exports = (db,DataTypes) => {
+const { v4: uuidv4 } = require("uuid");
+
+module.exports = (db, DataTypes) => {
   const Research = db.define("Research", {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      autoIncrement: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -13,21 +15,14 @@ module.exports = (db,DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // image: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    // },
   });
 
- 
-
+  Research.beforeCreate((research) => {
+    research.id = uuidv4();
+  });
 
   function setUrls(instance) {
     if (instance) {
-      // Set image and PDF base URLs + file names
-      // if (instance.image) {
-      //   instance.image = `${process.env.BASE_URL}/researches/images/${instance.image}`;
-      // }
       if (instance.pdf) {
         instance.pdf = `${process.env.BASE_URL}/researches/pdfs/${instance.pdf}`;
       }
@@ -55,5 +50,5 @@ module.exports = (db,DataTypes) => {
     setUrls(instance);
   });
 
-  return  Research;
+  return Research;
 };

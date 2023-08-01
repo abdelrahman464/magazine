@@ -1,15 +1,17 @@
+const { v4: uuidv4 } = require("uuid");
+
 module.exports = (db, DataTypes) => {
   const Issue = db.define("Issue", {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      autoIncrement: true,
     },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    issueNumber: {  
+    issueNumber: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -19,7 +21,10 @@ module.exports = (db, DataTypes) => {
     },
   });
 
-  
+  Issue.beforeCreate((issue) => {
+    issue.id = uuidv4();
+  });
+
   function setUrls(instance) {
     if (instance) {
       // Set image and PDF base URLs + file names

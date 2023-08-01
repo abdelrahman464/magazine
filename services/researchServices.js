@@ -14,7 +14,6 @@ const {
 const { uploadMixOfImages } = require("../middlewares/uploadImageMiddleware");
 
 exports.uploadResearchPdf = uploadMixOfImages([
- 
   {
     name: "pdf",
     maxCount: 1,
@@ -65,6 +64,5 @@ exports.getAllResearchesFromIssue = asyncHandler(async (req, res, next) => {
     },
     include: [Issue], // Include the associated Issue model
   });
-
   res.status(200).json({ data: issueResearches });
 });
