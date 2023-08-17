@@ -11,6 +11,14 @@ module.exports = (db, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    researcher: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     pdf: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -48,6 +48,7 @@ exports.getOne = (Model) =>
 exports.getAll = (Model, modelName) =>
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.keyword; // Assuming the search term is passed in the 'q' query parameter
+    const {year} = req.query;
 
     let filter = {};
     if (searchQuery) {
@@ -64,7 +65,11 @@ exports.getAll = (Model, modelName) =>
         };
       }
     }
-
+    if (year) {
+      filter.createdAt = {
+        [Op.between]: [`${year}-01-01T00:00:00.000Z`, `${year}-12-31T23:59:59.999Z`],
+      };
+    }
     const documents = await Model.findAll({ where: filter });
     res.status(200).json({ data: documents });
   });

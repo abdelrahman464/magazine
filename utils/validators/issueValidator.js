@@ -32,6 +32,17 @@ exports.updateIssueValidator = [
     .withMessage("too short title ")
     .isLength({ max: 41 })
     .withMessage("too long title"),
+  check("MagazineId")
+    .optional()
+    .isUUID()
+    .withMessage("Invalid id format")
+    .custom((val) =>
+      Magazine.findOne({ where: { id: val } }).then((magazine) => {
+        if (!magazine) {
+          return Promise.reject(new Error("Maginze Not Found"));
+        }
+      })
+    ),
   validatorMiddleware,
 ];
 exports.idIssueValidator = [
