@@ -35,10 +35,10 @@ router.put(
 );
 router
   .route("/")
-  .get(getAllUsers)
+  .get(authServices.protect, authServices.allowedTo("admin"), getAllUsers)
   .post(
-    // authServices.protect,
-    // authServices.allowedTo("admin"),
+    authServices.protect,
+    authServices.allowedTo("admin"),
     createUserValidator,
     createUser
   );
